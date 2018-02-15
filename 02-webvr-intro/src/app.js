@@ -10,6 +10,7 @@ import AppControls from 'controls/AppControls'
 
 import makeLights from 'components/Lights'
 import Sky from 'components/Sky'
+import Cursor from 'components/Cursor'
 import Ground from 'components/Ground'
 import Turret from 'components/Turret'
 import Wall from 'components/Wall'
@@ -80,8 +81,9 @@ class App {
   setComponents () {
     const sky = Sky()
     const ground = Ground()
-    this.turret = new Turret(this.renderer)
     const wall = new Wall(this.renderer)
+    this.turret = new Turret(this.renderer)
+    this.cursor = new Cursor()
 
     this.turret.init()
       .then(this.handleModelLoad)
@@ -91,6 +93,7 @@ class App {
 
     this.scene.add(sky)
     this.scene.add(ground)
+    this.scene.add(this.cursor.mesh)
   }
 
   setLights () {
@@ -128,10 +131,14 @@ class App {
   };
 
   render () {
-    this.stats.update()
+    if (this.cursor) {
+      this.cursor.update(this.camera)
+    }
     this.displayManager.frame()
     this.displayManager.render(this.scene)
     this.updateTurret()
+
+    this.stats.update()
   }
 }
 
