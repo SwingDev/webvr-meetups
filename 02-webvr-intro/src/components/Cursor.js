@@ -5,13 +5,14 @@ import CrosshairImage from 'images/crosshair.png'
 const DEFAULT_CURSOR_DISTANCE = 1
 const DEFAULT_CURSOR_WIDTH = 0.05
 
-const origin = new THREE.Vector3()
 const vector = new THREE.Vector3()
 
 class Cursor {
   constructor () {
-    const texture = new THREE.TextureLoader().load(CrosshairImage)
+    this.origin = new THREE.Vector3()
+    this.direction = new THREE.Vector3()
 
+    const texture = new THREE.TextureLoader().load(CrosshairImage)
     const geometry = new THREE.PlaneGeometry(
       DEFAULT_CURSOR_WIDTH,
       DEFAULT_CURSOR_WIDTH
@@ -31,11 +32,11 @@ class Cursor {
   }
 
   update (camera) {
-    const direction = camera.getWorldDirection(vector)
+    this.direction = camera.getWorldDirection(vector)
 
-    const x = origin.x + direction.x * DEFAULT_CURSOR_DISTANCE
-    const y = origin.y + direction.y * DEFAULT_CURSOR_DISTANCE
-    const z = origin.z + direction.z * DEFAULT_CURSOR_DISTANCE
+    const x = this.origin.x + this.direction.x * DEFAULT_CURSOR_DISTANCE
+    const y = this.origin.y + this.direction.y * DEFAULT_CURSOR_DISTANCE
+    const z = this.origin.z + this.direction.z * DEFAULT_CURSOR_DISTANCE
 
     this.mesh.position.set(
       camera.position.x + x,

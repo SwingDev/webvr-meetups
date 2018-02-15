@@ -9,7 +9,10 @@ GLTF2Loader(THREE)
 const WALL_WIDTH = 4
 const WALL_HEIGHT = 4
 
+const BOX_SIZE = 2
 const BOX_SCALE = 1
+
+const raycaster = new THREE.Raycaster()
 
 class Wall {
   constructor (renderer) {
@@ -29,16 +32,32 @@ class Wall {
     for (let i = 0; i < WALL_WIDTH; i += 1) {
       for (let j = 0; j < WALL_HEIGHT; j += 1) {
         const model = this.model.clone()
-        model.position.x = (i - (WALL_WIDTH / 4)) * 2
-        model.position.y = j * 2
+        model.position.x = i * BOX_SIZE * BOX_SCALE
+        model.position.y = j * BOX_SIZE * BOX_SCALE
         this.root.add(model)
       }
     }
   }
 
+  hit (origin, direction) {
+    raycaster.set(origin, direction)
+
+    const intersects = raycaster.intersectObjects(this.root.children)
+
+    for (let i = 0; i < intersects.length; i += 1) {
+      const { object } = intersects[i]
+      this.root.remove(object)
+    }
+
+    if (this.root.children.length === 0) {
+      this.build()
+    }
+  }
+
   setPosition () {
-    this.root.position.y = -Y_OFFSET
-    this.root.position.z = -7
+    this.root.position.x = -WALL_WIDTH + (BOX_SIZE / 2)
+    this.root.position.y = -Y_OFFSET + (BOX_SIZE / 2)
+    this.root.position.z = -10
   }
 
   handleLoad = (object, resolve) => {

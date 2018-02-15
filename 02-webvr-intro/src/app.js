@@ -81,14 +81,14 @@ class App {
   setComponents () {
     const sky = Sky()
     const ground = Ground()
-    const wall = new Wall(this.renderer)
+    this.wall = new Wall(this.renderer)
     this.turret = new Turret(this.renderer)
     this.cursor = new Cursor()
 
     this.turret.init()
       .then(this.handleModelLoad)
 
-    wall.init()
+    this.wall.init()
       .then(this.handleModelLoad)
 
     this.scene.add(sky)
@@ -122,7 +122,15 @@ class App {
   };
 
   handleButtonClick = (events) => {
-    console.log(events)
+    if (
+      (typeof this.wall !== 'undefined') &&
+      (typeof this.cursor !== 'undefined')
+    ) {
+      this.wall.hit(
+        this.cursor.origin,
+        this.cursor.direction
+      )
+    }
   }
 
   animate = () => {
