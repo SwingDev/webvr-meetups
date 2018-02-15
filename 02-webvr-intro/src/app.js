@@ -81,7 +81,7 @@ class App {
     const sky = Sky()
     const ground = Ground()
     this.turret = new Turret(this.renderer)
-    const wall = new Wall()
+    const wall = new Wall(this.renderer)
 
     this.turret.init()
       .then(this.handleModelLoad)

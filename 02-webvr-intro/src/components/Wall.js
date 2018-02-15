@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import GLTF2Loader from 'three-gltf2-loader'
 
 import { Y_OFFSET } from 'root/config'
+import addPmremEnvMap from 'utils/pmrem-envmap'
 
 GLTF2Loader(THREE)
 
@@ -11,7 +12,8 @@ const WALL_HEIGHT = 4
 const BOX_SCALE = 1
 
 class Wall {
-  constructor (model) {
+  constructor (renderer) {
+    this.renderer = renderer
     this.root = new THREE.Group()
   }
 
@@ -44,6 +46,7 @@ class Wall {
       if (child.isMesh) {
         this.model = child
         this.model.scale.set(BOX_SCALE, BOX_SCALE, BOX_SCALE)
+        addPmremEnvMap(this.model, this.renderer)
         this.build()
         this.setPosition()
 
