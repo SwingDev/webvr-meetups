@@ -1,0 +1,39 @@
+body {
+  background-color: #fff;
+}
+
+canvas {
+  display: block;
+}
+
+// VR button
+button.webvr-ui-button {
+  position: absolute;
+  right: 80px;
+  bottom: 15px;
+}
+
+// Fullscreen
+.button {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  width: 55px;
+  height: 55px;
+  padding: 0;
+  line-height: 55px;
+  text-align: center;
+  cursor: pointer;
+  background: none;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  outline: 0;
+
+  &__icon {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin-top: -3px;
+    vertical-align: middle;
+  }
+}
