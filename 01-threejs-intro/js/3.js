@@ -10,9 +10,9 @@ function createScene() {
 function createCamera() {
   const aspectRatio = window.innerWidth / window.innerHeight;
   const camera = new THREE.PerspectiveCamera(
-    75, aspectRatio, 0.1, 1000
+    75, aspectRatio, 0.1, 1000000
   );
-  camera.position.set(0, 2, -5);
+  camera.position.set(0, 2000, -5000);
   camera.lookAt(0, 0, 0);
 
   return camera;
@@ -28,38 +28,25 @@ function createRenderer() {
   return renderer;
 }
 
-function createSkybox() {
-  const geometry = new THREE.SphereGeometry(1000, 32, 32);
-  const material = new THREE.MeshBasicMaterial({
-    map: textureLoader.load(
-      'assets/skybox.jpg'
-    ),
-    side: THREE.BackSide
-  });
-
-  const skybox = new THREE.Mesh(geometry, material);
-
-  return skybox;
-}
-
 function addLights() {
   const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
   hemiLight.color.setHSL(0.6, 0.75, 0.5);
   hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
-  hemiLight.position.set(0, 500, 0);
+  hemiLight.position.set(0, 50000, 0);
 
   scene.add(hemiLight);
 
   const dirLight = new THREE.DirectionalLight(0xffffff, 1);
   dirLight.position.set(-1, 0.75, 1);
-  dirLight.position.multiplyScalar(50);
+  dirLight.position.multiplyScalar(5000);
 
   scene.add(dirLight);
 }
 
-var cannon;
 function createCannon() {
   const cannon = new THREE.Group();
+  cannon.castShadow = true;
+  cannon.receiveShadow = true;
 
   const cannonMaterial = new THREE.MeshPhysicalMaterial();
 
@@ -89,6 +76,7 @@ function createCannon() {
     (cannonHeadGroup) => {
       const cannonHead = cannonHeadGroup.children[0];
       cannonHead.material = cannonMaterial;
+      cannonHeadGroup.position.y = 500;
 
       cannon.add(cannonHeadGroup);
     }
@@ -104,9 +92,22 @@ function createCannon() {
     }
   );
 
-  cannon.scale.set(0.001, 0.001, 0.001);
-
   return cannon;
+}
+
+function createGround() {
+  const geometry = new THREE.PlaneBufferGeometry(100000, 100000);
+  const material = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0x050505 });
+  material.color.setHSL(0.095, 1, 0.75);
+
+  const ground = new THREE.Mesh(geometry, material);
+
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = 0;
+
+  ground.receiveShadow = true;
+
+  return ground;
 }
 
 var cannon, skybox;
@@ -119,11 +120,14 @@ function setup() {
 
   addLights();
 
-  skybox = createSkybox();
-  scene.add(skybox);
-
   cannon = createCannon();
   scene.add(cannon);
+
+  ground = createGround();
+  scene.add(ground);
+
+  skybox = createSkybox();
+  scene.add(skybox);
 }
 
 function render() {

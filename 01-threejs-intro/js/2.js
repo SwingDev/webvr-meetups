@@ -9,9 +9,9 @@ function createScene() {
 function createCamera() {
   const aspectRatio = window.innerWidth / window.innerHeight;
   const camera = new THREE.PerspectiveCamera(
-    75, aspectRatio, 0.1, 10000
+    75, aspectRatio, 0.1, 1000000
   );
-  camera.position.set(0, 2, -5);
+  camera.position.set(0, 2000, -5000);
   camera.lookAt(0, 0, 0);
 
   return camera;
@@ -27,43 +27,43 @@ function createRenderer() {
   return renderer;
 }
 
-function createSkybox() {
-  const geometry = new THREE.SphereGeometry(1000, 32, 32);
-  const material = new THREE.MeshBasicMaterial({
-    map: textureLoader.load(
-      'assets/skybox.jpg'
-    ),
-    side: THREE.BackSide
-  });
+function createGround() {
+  const geometry = new THREE.PlaneBufferGeometry(100000, 100000);
+  const material = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0x050505 });
+  material.color.setHSL(0.095, 1, 0.75);
 
-  const skybox = new THREE.Mesh(geometry, material);
+  const ground = new THREE.Mesh(geometry, material);
 
-  return skybox;
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = 0;
+
+  return ground;
 }
 
 function addLights() {
   const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
   hemiLight.color.setHSL(0.6, 0.75, 0.5);
   hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
-  hemiLight.position.set(0, 500, 0);
+  hemiLight.position.set(0, 50000, 0);
 
   scene.add(hemiLight);
 
   const dirLight = new THREE.DirectionalLight(0xffffff, 1);
   dirLight.position.set(-1, 0.75, 1);
-  dirLight.position.multiplyScalar(50);
+  dirLight.position.multiplyScalar(5000);
 
   scene.add(dirLight);
 }
 
+let uniforms;
 function createCube() {
   const fragmentShader = `
     precision highp float;
 
-    varying vec3 vNormal;
-
+    uniform float time;
     void main () {
-      gl_FragColor = vec4(vNormal, 1.0);
+      gl_FragColor =
+        vec4(sin(time), 0.0, cos(time), 1.0);
     }
   `;
   const vertexShader = `
@@ -73,23 +73,25 @@ function createCube() {
     uniform mat4 projectionMatrix;
     uniform mat4 modelViewMatrix;
 
-    varying vec3 vNormal;
+    uniform float time;
 
     void main () {
-      vNormal = normal;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      gl_Position = projectionMatrix *
+        modelViewMatrix *
+          (vec4(position * max(0.5, abs(sin(time))), 1.0));
     }
   `;
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const geometry = new THREE.BoxGeometry(1000, 1000, 1000);
+
+  uniforms = {
+    time: { type: "f", value: 1.0 }
+  };
   const material = new THREE.RawShaderMaterial({
-    vertexShader, fragmentShader
+    vertexShader, fragmentShader, uniforms
   });
-  // const material = new THREE.MeshStandardMaterial({
-  //   color: 0xFFFFFF,
-  //   metalness: 0.2,
-  //   roughness: 0.2
-  // });
+
   const cube = new THREE.Mesh(geometry, material);
+  cube.position.y += 500;
 
   return cube;
 }
@@ -107,12 +109,18 @@ function setup() {
   skybox = createSkybox();
   scene.add(skybox);
 
+  ground = createGround();
+  scene.add(ground);
+
   cube = createCube();
   scene.add(cube);
 }
 
+var startTime = Date.now();
 function render() {
   cube.rotation.y += 0.02;
+
+  uniforms.time.value = (Date.now() - startTime) / 1000.0;
 
   renderer.render(scene, camera);
   requestAnimationFrame(render);

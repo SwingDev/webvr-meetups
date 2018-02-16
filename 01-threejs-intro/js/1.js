@@ -9,9 +9,9 @@ function createScene() {
 function createCamera() {
   const aspectRatio = window.innerWidth / window.innerHeight;
   const camera = new THREE.PerspectiveCamera(
-    75, aspectRatio, 0.1, 10000
+    75, aspectRatio, 0.1, 1000000
   );
-  camera.position.set(0, 0, -5);
+  camera.position.set(0, 2000, -5000);
   camera.lookAt(0, 0, 0);
 
   return camera;
@@ -27,20 +27,38 @@ function createRenderer() {
   return renderer;
 }
 
-function createSkybox() {
-  const geometry = new THREE.SphereGeometry(1000, 32, 32);
-  const material = new THREE.MeshBasicMaterial({
-    map: textureLoader.load(
-      'assets/skybox.jpg'
-    ),
-    side: THREE.BackSide
-  });
+function addLights() {
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
+  hemiLight.color.setHSL(0.6, 0.75, 0.5);
+  hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
+  hemiLight.position.set(0, 50000, 0);
 
-  const skybox = new THREE.Mesh(geometry, material);
+  scene.add(hemiLight);
 
-  return skybox;
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  dirLight.position.set(-1, 0.75, 1);
+  dirLight.position.multiplyScalar(5000);
+
+  scene.add(dirLight);
 }
 
+let ground;
+function createGround() {
+  const geometry = new THREE.PlaneBufferGeometry(100000, 100000);
+  const material = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0x050505 });
+  material.color.setHSL(0.095, 1, 0.75);
+
+  addLights();
+
+  const ground = new THREE.Mesh(geometry, material);
+
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = 0;
+
+  return ground;
+}
+
+let skybox;
 function setup() {
   scene = createScene();
   camera = createCamera();
@@ -50,6 +68,9 @@ function setup() {
 
   skybox = createSkybox();
   scene.add(skybox);
+
+  ground = createGround();
+  scene.add(ground);
 }
 
 function render() {
