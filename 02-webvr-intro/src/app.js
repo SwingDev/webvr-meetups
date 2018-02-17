@@ -34,6 +34,9 @@ class App {
     this.setScene()
     this.setRenderer()
     this.setLights()
+    this.setComponents()
+
+    this.clock = new THREE.Clock()
 
     this.stats = enableDevTools().stats
     this.controls = new AppControls(
@@ -50,7 +53,6 @@ class App {
     )
 
     this.animate()
-    this.setComponents()
 
     setVrUI(this.renderer)
     window.addEventListener('resize', this.handleResize)
@@ -134,14 +136,19 @@ class App {
   }
 
   animate = () => {
-    this.render()
+    this.render(this.clock.getDelta())
     this.displayManager.requestAnimationFrame(this.animate)
   };
 
-  render () {
+  render (clockDelta) {
     if (this.cursor) {
       this.cursor.update(this.camera)
     }
+
+    if (this.wall && this.wall.particleGroup) {
+      this.wall.particleGroup.tick(clockDelta)
+    }
+
     this.displayManager.frame()
     this.displayManager.render(this.scene)
     this.updateTurret()

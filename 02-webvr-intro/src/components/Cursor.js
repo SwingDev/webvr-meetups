@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-import CrosshairImage from 'images/crosshair.png'
+import crosshairImage from 'images/crosshair.png'
 
 const DEFAULT_CURSOR_DISTANCE = 1
 const DEFAULT_CURSOR_WIDTH = 0.05
@@ -12,7 +12,7 @@ class Cursor {
     this.origin = new THREE.Vector3()
     this.direction = new THREE.Vector3()
 
-    const texture = new THREE.TextureLoader().load(CrosshairImage)
+    const texture = new THREE.TextureLoader().load(crosshairImage)
     const geometry = new THREE.PlaneGeometry(
       DEFAULT_CURSOR_WIDTH,
       DEFAULT_CURSOR_WIDTH

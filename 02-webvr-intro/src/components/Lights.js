@@ -20,7 +20,7 @@ export default function () {
   dirLight.shadow.camera.right = d
   dirLight.shadow.camera.top = d
   dirLight.shadow.camera.bottom = -d
-  dirLight.shadow.camera.far = 3500
+  dirLight.shadow.camera.far = 4000
   dirLight.shadow.bias = -0.0001
 
   return {
