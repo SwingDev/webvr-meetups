@@ -130,10 +130,15 @@ class App {
     ) {
       this.wall.hit(
         this.cursor.origin,
-        this.cursor.direction
+        this.cursor.direction,
+        this.handleHit
       )
     }
-  }
+  };
+
+  handleHit = () => {
+    this.turret.triggerSmoke()
+  };
 
   animate = () => {
     this.render(this.clock.getDelta())
@@ -147,6 +152,10 @@ class App {
 
     if (this.wall && this.wall.particleGroup) {
       this.wall.particleGroup.tick(clockDelta)
+    }
+
+    if (this.turret && this.turret.particleGroup) {
+      this.turret.particleGroup.tick(clockDelta)
     }
 
     this.displayManager.frame()

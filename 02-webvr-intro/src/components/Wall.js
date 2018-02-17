@@ -104,7 +104,7 @@ class Wall {
     this.particleGroup.triggerPoolEmitter(2, position)
   }
 
-  hit (origin, direction) {
+  hit (origin, direction, callback) {
     raycaster.set(origin, direction)
 
     const intersects = raycaster.intersectObjects(this.root.children, true)
@@ -113,6 +113,10 @@ class Wall {
       const { object } = intersects[i]
 
       if (object.isMesh) {
+        if (callback) {
+          callback()
+        }
+
         this.triggerExplosion(object.position.clone())
         this.root.remove(object)
       }
