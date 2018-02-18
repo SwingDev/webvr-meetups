@@ -86,9 +86,7 @@ class Turrent {
 
   setShadows () {
     this.head.castShadow = true
-    this.head.receiveShadow = true
     this.base.castShadow = true
-    this.base.receiveShadow = true
   }
 
   rotateHead (x = 0, y = 0) {

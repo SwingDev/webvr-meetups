@@ -93,9 +93,9 @@ class App {
     this.wall.init()
       .then(this.handleModelLoad)
 
+    this.scene.add(this.cursor.mesh)
     this.scene.add(sky)
     this.scene.add(ground)
-    this.scene.add(this.cursor.mesh)
   }
 
   setLights () {

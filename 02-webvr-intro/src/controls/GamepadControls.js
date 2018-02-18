@@ -59,10 +59,10 @@ class GamepadControls {
             }
           }
 
-          if (btnState.pressed !== isPressed(buttons[j])) {
+          if (this.prevGamepadState[i][j].pressed !== isPressed(buttons[j])) {
             if (isPressed(buttons[j])) {
-              btnState.pressed = true
-              btnState.startTime = now
+              this.prevGamepadState[i][j].pressed = true
+              this.prevGamepadState[i][j].startTime = now
 
               this.batchedEvents.push({
                 type: 'GamepadEvent',
@@ -71,7 +71,7 @@ class GamepadControls {
                 gamepad: i
               })
             } else {
-              btnState.pressed = false
+              this.prevGamepadState[i][j].pressed = false
             }
           }
         }

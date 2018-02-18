@@ -1,10 +1,10 @@
 export const SKYBOX_TILES = [
-  require('images/villa-nova/px.png'),
-  require('images/villa-nova/nx.png'),
-  require('images/villa-nova/py.png'),
-  require('images/villa-nova/ny.png'),
-  require('images/villa-nova/pz.png'),
-  require('images/villa-nova/nz.png')
+  require('images/skybox/px.png'),
+  require('images/skybox/nx.png'),
+  require('images/skybox/py.png'),
+  require('images/skybox/ny.png'),
+  require('images/skybox/pz.png'),
+  require('images/skybox/nz.png')
 ]
 
 export const MODEL_NAMES = {

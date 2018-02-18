@@ -7,7 +7,7 @@ export default function () {
   hemiLight.position.set(0, 50, 0)
 
   const dirLight = new THREE.DirectionalLight(0xffffff, 1)
-  const d = 10
+  const d = 20
   dirLight.color.setHSL(0.1, 1, 0.95)
   dirLight.position.set(-1, 1.75, 1)
   dirLight.position.multiplyScalar(30)
@@ -20,8 +20,8 @@ export default function () {
   dirLight.shadow.camera.right = d
   dirLight.shadow.camera.top = d
   dirLight.shadow.camera.bottom = -d
-  dirLight.shadow.camera.far = 500
-  dirLight.shadow.camera.near = 0.5
+  dirLight.shadow.camera.far = 1000
+  dirLight.shadow.camera.near = 0.01
   dirLight.shadow.bias = 0.0001
 
   return {
