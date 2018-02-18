@@ -11,6 +11,7 @@ GLTF2Loader(THREE)
 
 const WALL_WIDTH = 4
 const WALL_HEIGHT = 4
+const EXPLOSION_DELAY = 200
 
 const raycaster = new THREE.Raycaster()
 const textureLoader = new THREE.TextureLoader()
@@ -25,12 +26,12 @@ const particleSettings = {
   depthWrite: false,
   blending: THREE.AdditiveBlending,
   maxParticleCount: 1000,
-  scale: 6500
+  scale: 700
 }
 
 const emitters = [
   {
-    particleCount: 20,
+    particleCount: 600,
     type: SPE.distributions.SPHERE,
     position: {
       radius: 1
@@ -38,9 +39,9 @@ const emitters = [
     maxAge: { value: 0.7 },
     activeMultiplier: 20,
     velocity: {
-      value: new THREE.Vector3(2)
+      value: new THREE.Vector3(1)
     },
-    size: { value: [1, 1] },
+    size: { value: 1 },
     color: {
       value: [
         new THREE.Color(0.5, 0.1, 0.05),
@@ -48,18 +49,6 @@ const emitters = [
       ]
     },
     opacity: { value: [0.5, 0.35, 0.1, 0] }
-  },
-  {
-    particleCount: 50,
-    position: { spread: new THREE.Vector3(1, 1, 1) },
-    velocity: {
-      spread: new THREE.Vector3(2),
-      distribution: SPE.distributions.SPHERE
-    },
-    size: { value: [1, 1, 1, 1] },
-    maxAge: { value: 0.7 },
-    activeMultiplier: 2000,
-    opacity: { value: [0.5, 0.25, 0, 0] }
   }
 ]
 
@@ -71,6 +60,7 @@ class Wall {
   constructor (renderer) {
     this.renderer = renderer
     this.root = new THREE.Group()
+    this.timer = null
     this.initParticles()
   }
 
@@ -85,7 +75,7 @@ class Wall {
   initParticles () {
     this.particleGroup = new SPE.Group(particleSettings)
 
-    this.particleGroup.addPool(2, emitters, false)
+    this.particleGroup.addPool(1, emitters, false)
     this.root.add(this.particleGroup.mesh)
   }
 
@@ -101,7 +91,7 @@ class Wall {
   }
 
   triggerExplosion (position) {
-    this.particleGroup.triggerPoolEmitter(2, position)
+    this.particleGroup.triggerPoolEmitter(1, position)
   }
 
   hit (origin, direction, callback) {
@@ -117,8 +107,11 @@ class Wall {
           callback()
         }
 
-        this.triggerExplosion(object.position.clone())
-        this.root.remove(object)
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.triggerExplosion(object.position.clone())
+          this.root.remove(object)
+        }, EXPLOSION_DELAY)
       }
     }
 

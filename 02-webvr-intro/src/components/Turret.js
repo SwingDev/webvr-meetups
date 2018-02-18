@@ -19,43 +19,25 @@ const particleSettings = {
   depthTest: true,
   depthWrite: false,
   blending: THREE.NormalBlending,
-  maxParticleCount: 1000,
-  scale: 6000
+  maxParticleCount: 1000
 }
 
 const emitters = [
   {
-    particleCount: 30,
+    particleCount: 600,
     type: SPE.distributions.SPHERE,
     position: {
       radius: 0.1
     },
     maxAge: {
-      value: 1
+      value: 0.5
     },
-    activeMultiplier: 40,
+    activeMultiplier: 20,
     velocity: {
-      value: new THREE.Vector3(1)
+      value: new THREE.Vector3(1.2)
     },
-    size: { value: 0.2 },
-    opacity: { value: [0.4, 0] }
-  },
-  {
-    particleCount: 50,
-    type: SPE.distributions.SPHERE,
-    position: {
-      spread: new THREE.Vector3(1, 1, 1)
-    },
-    maxAge: { value: 1 },
-    activeMultiplier: 2000,
-    velocity: {
-      value: new THREE.Vector3(1)
-    },
-    size: { value: 0.2 },
-    color: {
-      value: new THREE.Color(0.2, 0.2, 0.2)
-    },
-    opacity: { value: [0, 0, 0.2, 0] }
+    size: { value: 1.2 },
+    opacity: { value: [0.5, 0] }
   }
 ]
 
@@ -67,7 +49,7 @@ const getDumped = (value) => (
       : value
 )
 
-const smokePosition = new THREE.Vector3(0, 0.5, -1)
+const smokePosition = new THREE.Vector3(0, 0.5, -1.5)
 
 class Turrent {
   constructor (renderer) {
@@ -85,7 +67,7 @@ class Turrent {
   initParticles () {
     this.particleGroup = new SPE.Group(particleSettings)
 
-    this.particleGroup.addPool(2, emitters, false)
+    this.particleGroup.addPool(1, emitters, false)
     this.headGroup.add(this.particleGroup.mesh)
   }
 
@@ -114,7 +96,7 @@ class Turrent {
   }
 
   triggerSmoke () {
-    this.particleGroup.triggerPoolEmitter(2, smokePosition)
+    this.particleGroup.triggerPoolEmitter(1, smokePosition)
   }
 
   handleModelsLoad = (models) => {
