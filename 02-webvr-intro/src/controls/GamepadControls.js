@@ -12,11 +12,10 @@ const isPressed = (button) => (
   (isObject(button)) ? button.pressed : button === 1
 )
 
-export default class GamepadControls {
+class GamepadControls {
   constructor (target) {
-    this.enabled = true
-    this.tracking = false
     this.useGamepad = false
+    this.mouseEnabled = true
     this.target = target || window
     this.batchedEvents = []
     this.prevGamepadState = []
@@ -50,7 +49,6 @@ export default class GamepadControls {
         }
 
         const buttons = gamepads[i].buttons
-
         for (let j = 0; j < buttons.length; j += 1) {
           const btnState = this.prevGamepadState[i][j]
 
@@ -61,10 +59,10 @@ export default class GamepadControls {
             }
           }
 
-          if (this.prevGamepadState[i][j].pressed !== isPressed(buttons[j])) {
+          if (btnState.pressed !== isPressed(buttons[j])) {
             if (isPressed(buttons[j])) {
-              this.prevGamepadState[i][j].pressed = true
-              this.prevGamepadState[i][j].startTime = now
+              btnState.pressed = true
+              btnState.startTime = now
 
               this.batchedEvents.push({
                 type: 'GamepadEvent',
@@ -73,7 +71,7 @@ export default class GamepadControls {
                 gamepad: i
               })
             } else {
-              this.prevGamepadState[i][j].pressed = false
+              btnState.pressed = false
             }
           }
         }
@@ -101,12 +99,12 @@ export default class GamepadControls {
       'gamepaddisconnected',
       this.handleGamepadDisconnect
     )
-
-    this.enabled = false
   }
 
   handleClick = (event) => {
-    this.batchedEvents.push(event)
+    if (this.mouseEnabled) {
+      this.batchedEvents.push(event)
+    }
   };
 
   handleKeyDown = (event) => {
@@ -123,3 +121,5 @@ export default class GamepadControls {
     this.useGamepad = false
   };
 }
+
+export default GamepadControls

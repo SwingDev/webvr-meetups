@@ -4,6 +4,7 @@
 import * as THREE from 'three'
 
 const HALF_PI = Math.PI / 2
+const MOVE_CHECK_DELAY = 200
 
 export default class MousePanControls {
   constructor (camera, target) {
@@ -13,6 +14,7 @@ export default class MousePanControls {
     this.enabled = true
     this.tracking = false
     this.target = target || window
+    this.timer = null
 
     this.connect()
   }
@@ -37,9 +39,13 @@ export default class MousePanControls {
     this.tracking = true
     this.lastX = e.screenX
     this.lastY = e.screenY
+
+    this.timer = setTimeout(this.handleMoveDelay, MOVE_CHECK_DELAY)
   };
 
-  handleMouseUp = () => {
+  handleMouseUp = (e) => {
+    clearTimeout(this.timer)
+    this.moving = false
     this.tracking = false
   };
 
@@ -62,6 +68,10 @@ export default class MousePanControls {
 
     this.pitch += THREE.Math.degToRad(deltaY / height * this.camera.fov)
     this.pitch = Math.max(-HALF_PI, Math.min(HALF_PI, this.pitch))
+  };
+
+  handleMoveDelay = () => {
+    this.moving = true
   };
 
   resetRotation (x, y, z) {

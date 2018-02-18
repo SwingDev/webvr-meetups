@@ -16,7 +16,7 @@ const defaults = {
   onButtonClick: null
 }
 
-export default class AppControls {
+class AppControls {
   constructor (camera, target, options) {
     this.camera = camera
 
@@ -47,6 +47,8 @@ export default class AppControls {
     const { onButtonClick } = this.options
     const gamepadEvents = this.gamepad.getEvents()
 
+    this.gamepad.mouseEnabled = !this.nonVRControls.moving
+
     if (gamepadEvents && onButtonClick) {
       onButtonClick(gamepadEvents)
     }
@@ -62,3 +64,5 @@ export default class AppControls {
     this.nonVRControls.update()
   }
 }
+
+export default AppControls
