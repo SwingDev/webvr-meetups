@@ -23,11 +23,13 @@ class SoundPlayer {
   }
 
   play (soundName) {
-    const source = this.context.createBufferSource()
-    source.buffer = this.bufferLoader.bufferList[soundName]
+    if (this.loaded) {
+      const source = this.context.createBufferSource()
+      source.buffer = this.bufferLoader.bufferList[soundName]
 
-    source.connect(this.context.destination)
-    source.start(0)
+      source.connect(this.context.destination)
+      source.start(0)
+    }
   }
 }
 
