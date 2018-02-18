@@ -5,6 +5,7 @@ import GLTF2Loader from 'three-gltf2-loader'
 import { Y_OFFSET, BOX_SCALE, BOX_SIZE } from 'root/config'
 
 import addPmremEnvMap from 'utils/pmrem-envmap'
+import player from 'utils/SoundPlayer'
 import explosionImage from 'images/sprite-explosion2.png'
 
 GLTF2Loader(THREE)
@@ -25,32 +26,30 @@ const particleSettings = {
   depthTest: true,
   depthWrite: false,
   blending: THREE.AdditiveBlending,
-  maxParticleCount: 1000,
+  maxParticleCount: 1500,
   scale: 700
 }
 
-const emitters = [
-  {
-    particleCount: 600,
-    type: SPE.distributions.SPHERE,
-    position: {
-      radius: 1
-    },
-    maxAge: { value: 0.7 },
-    activeMultiplier: 20,
-    velocity: {
-      value: new THREE.Vector3(1)
-    },
-    size: { value: 1 },
-    color: {
-      value: [
-        new THREE.Color(0.5, 0.1, 0.05),
-        new THREE.Color(0.2, 0.2, 0.2)
-      ]
-    },
-    opacity: { value: [0.5, 0.35, 0.1, 0] }
-  }
-]
+const emitterSettings = {
+  particleCount: 600,
+  type: SPE.distributions.SPHERE,
+  position: {
+    radius: 1
+  },
+  maxAge: { value: 0.7 },
+  activeMultiplier: 20,
+  velocity: {
+    value: new THREE.Vector3(1)
+  },
+  size: { value: 2 },
+  color: {
+    value: [
+      new THREE.Color(0.5, 0.1, 0.05),
+      new THREE.Color(0.2, 0.2, 0.2)
+    ]
+  },
+  opacity: { value: [0.5, 0.35, 0.1, 0] }
+}
 
 const hasBoxes = (children) => (
   children.filter(child => child.isMesh).length !== 0
@@ -75,7 +74,7 @@ class Wall {
   initParticles () {
     this.particleGroup = new SPE.Group(particleSettings)
 
-    this.particleGroup.addPool(1, emitters, false)
+    this.particleGroup.addPool(2, emitterSettings, false)
     this.root.add(this.particleGroup.mesh)
   }
 
@@ -92,6 +91,7 @@ class Wall {
 
   triggerExplosion (position) {
     this.particleGroup.triggerPoolEmitter(1, position)
+    player.play('explosion')
   }
 
   hit (origin, direction, callback) {
@@ -111,12 +111,12 @@ class Wall {
         this.timer = setTimeout(() => {
           this.triggerExplosion(object.position.clone())
           this.root.remove(object)
+
+          if (!hasBoxes(this.root.children)) {
+            this.build()
+          }
         }, EXPLOSION_DELAY)
       }
-    }
-
-    if (!hasBoxes(this.root.children)) {
-      this.build()
     }
   }
 

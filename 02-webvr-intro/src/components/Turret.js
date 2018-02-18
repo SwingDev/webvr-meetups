@@ -4,6 +4,7 @@ import SPE from 'libs/SPE'
 import { Y_OFFSET } from 'root/config'
 import addPmremEnvMap from 'utils/pmrem-envmap'
 import loadModel from 'utils/model-loader'
+import player from 'utils/SoundPlayer'
 
 import smokeImage from 'images/smokeparticle.png'
 
@@ -36,7 +37,7 @@ const emitters = [
     velocity: {
       value: new THREE.Vector3(1.2)
     },
-    size: { value: 1.2 },
+    size: { value: 1.5 },
     opacity: { value: [0.5, 0] }
   }
 ]
@@ -96,6 +97,7 @@ class Turrent {
   }
 
   triggerSmoke () {
+    player.play('shot')
     this.particleGroup.triggerPoolEmitter(1, smokePosition)
   }
 
