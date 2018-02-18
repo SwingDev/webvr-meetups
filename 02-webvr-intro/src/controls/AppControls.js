@@ -1,8 +1,6 @@
 // eslint-disable-next-line max-len
 // @source: https://github.com/facebook/react-vr/blob/a1574e94917304a1c47f539df0dc5d0f4306fba9/OVRUI/src/Control/AppControls.js
 
-import isFunction from 'lodash/isFunction'
-
 import MousePanControls from './MousePanControls'
 import DeviceOrientationControls from './DeviceOrientationControls'
 import VRControls from './VRControls'
@@ -18,7 +16,7 @@ const defaults = {
   onButtonClick: null
 }
 
-export default class AppControls {
+class AppControls {
   constructor (camera, target, options) {
     this.camera = camera
 
@@ -47,9 +45,11 @@ export default class AppControls {
 
   frame (frameOptions) {
     const { onButtonClick } = this.options
-    const gamepadEvents = this.gamepad.events
+    const gamepadEvents = this.gamepad.getEvents()
 
-    if (gamepadEvents && isFunction(onButtonClick)) {
+    this.gamepad.mouseEnabled = !this.nonVRControls.moving
+
+    if (gamepadEvents && onButtonClick) {
       onButtonClick(gamepadEvents)
     }
 
@@ -64,3 +64,5 @@ export default class AppControls {
     this.nonVRControls.update()
   }
 }
+
+export default AppControls

@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import { Y_OFFSET } from 'root/config'
 
 export default function () {
-  const geometry = new THREE.PlaneBufferGeometry(10000, 10000)
+  const geometry = new THREE.PlaneBufferGeometry(500, 500)
   const material = new THREE.MeshPhongMaterial({
     color: 0xffffff,
     specular: 0x050505

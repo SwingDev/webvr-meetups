@@ -10,6 +10,7 @@ import AppControls from 'controls/AppControls'
 
 import makeLights from 'components/Lights'
 import Sky from 'components/Sky'
+import Cursor from 'components/Cursor'
 import Ground from 'components/Ground'
 import Turret from 'components/Turret'
 import Wall from 'components/Wall'
@@ -33,6 +34,9 @@ class App {
     this.setScene()
     this.setRenderer()
     this.setLights()
+    this.setComponents()
+
+    this.clock = new THREE.Clock()
 
     this.stats = enableDevTools().stats
     this.controls = new AppControls(
@@ -49,7 +53,6 @@ class App {
     )
 
     this.animate()
-    this.setComponents()
 
     setVrUI(this.renderer)
     window.addEventListener('resize', this.handleResize)
@@ -80,15 +83,17 @@ class App {
   setComponents () {
     const sky = Sky()
     const ground = Ground()
+    this.wall = new Wall(this.renderer)
     this.turret = new Turret(this.renderer)
-    const wall = new Wall()
+    this.cursor = new Cursor()
 
     this.turret.init()
       .then(this.handleModelLoad)
 
-    wall.init()
+    this.wall.init()
       .then(this.handleModelLoad)
 
+    this.scene.add(this.cursor.mesh)
     this.scene.add(sky)
     this.scene.add(ground)
   }
@@ -119,19 +124,45 @@ class App {
   };
 
   handleButtonClick = (events) => {
-    console.log(events)
-  }
+    if (
+      (typeof this.wall !== 'undefined') &&
+      (typeof this.cursor !== 'undefined')
+    ) {
+      this.wall.hit(
+        this.cursor.origin,
+        this.cursor.direction,
+        this.handleHit
+      )
+    }
+  };
+
+  handleHit = () => {
+    this.turret.triggerSmoke()
+  };
 
   animate = () => {
-    this.render()
+    this.render(this.clock.getDelta())
     this.displayManager.requestAnimationFrame(this.animate)
   };
 
-  render () {
-    this.stats.update()
+  render (clockDelta) {
+    if (this.cursor) {
+      this.cursor.update(this.camera)
+    }
+
+    if (this.wall && this.wall.particleGroup) {
+      this.wall.particleGroup.tick(clockDelta)
+    }
+
+    if (this.turret && this.turret.particleGroup) {
+      this.turret.particleGroup.tick(clockDelta)
+    }
+
     this.displayManager.frame()
     this.displayManager.render(this.scene)
     this.updateTurret()
+
+    this.stats.update()
   }
 }
 
