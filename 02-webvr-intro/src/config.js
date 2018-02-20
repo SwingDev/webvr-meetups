@@ -8,9 +8,12 @@ export const SKYBOX_TILES = [
 ]
 
 export const MODEL_NAMES = {
+  // rocket: 'turret_rocket_low',
+  // turretHead: 'turret_head_low',
+  // turretBase: 'turret_legs_low'
   rocket: 'turret_rocket_low',
-  turretHead: 'turret_head_low',
-  turretBase: 'turret_legs_low'
+  turretHead: 'cannon_main_head_bottom_low',
+  turretBase: 'leg_armor_low'
 }
 
 export const Y_OFFSET = 2.5

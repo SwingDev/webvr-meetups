@@ -61,7 +61,7 @@ class Turrent {
   }
 
   init () {
-    return loadModel('/turret/turret.gltf')
+    return loadModel('/turret_v2/cannon_turret_paint.gltf')
       .then(this.handleModelsLoad)
   }
 
@@ -102,6 +102,9 @@ class Turrent {
   handleModelsLoad = (models) => {
     this.head = models.turretHead
     this.base = models.turretBase
+
+    // this.head.scale.set(3, 3, 3)
+    // this.base.scale.set(3, 3, 3)
 
     this.headGroup = new THREE.Group()
     this.headGroup.add(this.head)

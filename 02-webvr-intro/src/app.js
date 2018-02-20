@@ -15,6 +15,9 @@ import Ground from 'components/Ground'
 import Turret from 'components/Turret'
 import Wall from 'components/Wall'
 
+var OBJLoader = require('three-obj-loader');
+OBJLoader(THREE);
+
 const ASPECT_RATIO = window.innerWidth / window.innerHeight
 
 const enableDevTools = () => {
@@ -27,6 +30,75 @@ const enableDevTools = () => {
   document.body.appendChild(stats.dom)
 
   return { stats }
+}
+
+const textureLoader = new THREE.TextureLoader()
+const objLoader = new THREE.OBJLoader()
+
+function createCannon() {
+  const cannon = new THREE.Group();
+  cannon.castShadow = true;
+  cannon.receiveShadow = true;
+
+  const cannonMaterial = new THREE.MeshPhysicalMaterial();
+
+  // const skyboxTexture = textureLoader.load('/skybox-3.jpg');
+  // skyboxTexture.mapping = THREE.EquirectangularReflectionMapping;
+
+  // cannonMaterial.envMap = skyboxTexture;
+
+  cannonMaterial.normalMap = textureLoader.load(
+    '/turret-3/cannon_turret_2_ddn.png'
+  );
+  cannonMaterial.normalMap.wrapS = THREE.RepeatMapping;
+  cannonMaterial.normalMap.wrapT = THREE.RepeatMapping;
+  cannonMaterial.aoMap = textureLoader.load(
+    '/turret-3/cannon_turret_2_orm.png'
+  );
+  cannonMaterial.aoMap.wrapS = THREE.RepeatMapping;
+  cannonMaterial.aoMap.wrapT = THREE.RepeatMapping;
+  cannonMaterial.roughnessMap = textureLoader.load(
+    '/turret-3/cannon_turret_2_orm.png'
+  );
+  cannonMaterial.roughnessMap.wrapS = THREE.RepeatMapping;
+  cannonMaterial.roughnessMap.wrapT = THREE.RepeatMapping;
+  cannonMaterial.metalnessMap = textureLoader.load(
+    '/turret-3/cannon_turret_2_orm.png'
+  );
+  cannonMaterial.metalnessMap.wrapS = THREE.RepeatMapping;
+  cannonMaterial.metalnessMap.wrapT = THREE.RepeatMapping;
+  cannonMaterial.map = textureLoader.load(
+    '/turret-3/cannon_turret_2_diff.png'
+  );
+  cannonMaterial.map.wrapS = THREE.RepeatMapping;
+  cannonMaterial.map.wrapT = THREE.RepeatMapping;
+
+  objLoader.load(
+    '/turret-3/turret_head.obj',
+    (cannonHeadGroup) => {
+      const cannonHead = cannonHeadGroup.children[0];
+      cannonHead.material = cannonMaterial;
+      cannonHeadGroup.position.y = 500;
+
+      cannon.add(cannonHeadGroup);
+    }
+  );
+
+  objLoader.load(
+    '/turret-3/turret_legs.obj',
+    (cannonLegsGroup) => {
+      const cannonLegs = cannonLegsGroup.children[0];
+      cannonLegs.material = cannonMaterial;
+
+      cannon.add(cannonLegsGroup);
+    }
+  );
+
+  cannon.scale.set(0.001, 0.001, 0.001)
+  cannon.position.z = -1.5
+  cannon.position.y = -0.5
+
+  return cannon;
 }
 
 class App {
@@ -86,6 +158,7 @@ class App {
     this.wall = new Wall(this.renderer)
     this.turret = new Turret(this.renderer)
     this.cursor = new Cursor()
+    this.cannon = createCannon()
 
     this.turret.init()
       .then(this.handleModelLoad)
@@ -96,6 +169,7 @@ class App {
     this.scene.add(this.cursor.mesh)
     this.scene.add(sky)
     this.scene.add(ground)
+    this.scene.add(this.cannon)
   }
 
   setLights () {
@@ -161,6 +235,8 @@ class App {
     this.displayManager.frame()
     this.displayManager.render(this.scene)
     this.updateTurret()
+
+    this.cannon.rotation.y += 0.01
 
     this.stats.update()
   }
