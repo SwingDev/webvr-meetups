@@ -1,8 +1,8 @@
 import BufferLoader from './BufferLoader'
 
 const sounds = {
-  shot: '/cannon-shot.mp3',
-  explosion: '/box-explosion.mp3'
+  shot: 'cannon-shot.mp3',
+  explosion: 'box-explosion.mp3'
 }
 
 class SoundPlayer {

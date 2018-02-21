@@ -1,6 +1,5 @@
 require('dotenv').config()
 
-const fs = require('fs')
 const path = require('path')
 const merge = require('webpack-merge')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -8,19 +7,17 @@ const ManifestPlugin = require('webpack-manifest-plugin')
 const MinifyPlugin = require('babel-minify-webpack-plugin')
 const ImageminPlugin = require('imagemin-webpack-plugin').default
 const imageminJpegoptim = require('imagemin-jpegoptim')
-const SitemapWebpackPlugin = require('sitemap-webpack-plugin').default
 
-const routes = require('../routes.config')
 const base = require('./webpack.base')
 
-const STATIC_DIR = path.resolve(__dirname, '..', 'dist', 'static')
+const STATIC_DIR = path.resolve(__dirname, '..', 'dist')
 const extractStyles = new ExtractTextPlugin('styles.[contenthash].css')
 
 module.exports = merge(base, {
   devtool: false,
   output: {
     path: STATIC_DIR,
-    publicPath: '/',
+    publicPath: '',
     filename: '[name].[hash].js'
   },
   module: {

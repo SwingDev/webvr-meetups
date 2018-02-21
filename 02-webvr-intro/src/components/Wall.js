@@ -67,7 +67,7 @@ class Wall {
     const loader = new THREE.GLTFLoader()
 
     return new Promise((resolve, reject) => {
-      loader.load('/box/box.gltf', (object) => this.handleLoad(object, resolve))
+      loader.load('box/box.gltf', (object) => this.handleLoad(object, resolve))
     })
   }
 

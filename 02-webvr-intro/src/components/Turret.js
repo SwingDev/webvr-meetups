@@ -61,7 +61,7 @@ class Turrent {
   }
 
   init () {
-    return loadModel('/turret_v2/PBR - Metallic Roughness.gltf')
+    return loadModel('turret_v2/PBR - Metallic Roughness.gltf')
       .then(this.handleModelsLoad)
   }
 
