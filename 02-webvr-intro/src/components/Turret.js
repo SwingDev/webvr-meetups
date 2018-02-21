@@ -50,7 +50,7 @@ const getDumped = (value) => (
       : value
 )
 
-const smokePosition = new THREE.Vector3(0, 0.5, -1.5)
+const smokePosition = new THREE.Vector3(0, 0.1, -1.5)
 
 class Turrent {
   constructor (renderer) {
@@ -61,12 +61,14 @@ class Turrent {
   }
 
   init () {
-    return loadModel('/turret/turret.gltf')
+    return loadModel('/turret_v2/PBR - Metallic Roughness.gltf')
       .then(this.handleModelsLoad)
   }
 
   initParticles () {
     this.particleGroup = new SPE.Group(particleSettings)
+
+    this.particleGroup.mesh.frustumCulled = false
 
     this.particleGroup.addPool(1, emitters, false)
     this.headGroup.add(this.particleGroup.mesh)
@@ -81,7 +83,7 @@ class Turrent {
     this.headGroup.position.y = 0.5
 
     this.root.position.z = -2
-    this.root.position.y = -Y_OFFSET + 0.95
+    this.root.position.y = -Y_OFFSET + 0.65
   }
 
   setShadows () {

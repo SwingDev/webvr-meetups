@@ -131,6 +131,7 @@ class Wall {
       if (child.isMesh) {
         this.box = child
         this.box.scale.set(BOX_SCALE, BOX_SCALE, BOX_SCALE)
+        this.box.castShadow = true
         addPmremEnvMap(this.box, this.renderer)
 
         this.build()
