@@ -7,6 +7,7 @@ This repository contains all projects and demos presented during Swing3D WebVR m
 ## Table of contents
 - [Three.js Introduction](https://github.com/SwingDev/webvr-meetups/tree/master/01-threejs-intro)
 - [Building Blocks of WebVR](https://github.com/SwingDev/webvr-meetups/tree/master/02-webvr-intro)
+- [First Steps in React VR](https://github.com/SwingDev/webvr-meetups/tree/master/03-reactvr-video-player)
 
 ## License
 Released under the [MIT License](https://github.com/SwingDev/webvr-meetups/blob/master/LICENSE).

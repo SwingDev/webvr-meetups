@@ -1,10 +1,10 @@
-# ReactVR Video Player
-Simple VR video player built in [ReactVR][reactvr]
+# React VR Video Player
+Simple VR video player built in [React VR][reactvr]
 
 ## Requirements
 - [Node.js][node.js]
 - [Yarn][yarn]
-- [ReactVR CLI][reactvr-cli]
+- [React VR CLI][reactvr-cli]
 - [Chrome][chrome] or other browser which supports WebVR (or at least the experimental flag) - [see more][browser-reference]
 
 ## Usage
@@ -18,6 +18,10 @@ Simple VR video player built in [ReactVR][reactvr]
 - go to `chrome://flags`
 - search for "WebVR"
 - click "Enabled"
+
+## Notes
+- Videos are grabbed from https://www.mettle.com/360vr-master-series-free-360-downloads-page/
+- Background panorama photo is from https://flic.kr/p/RnVdRh
 
 [reactvr-cli]: https://facebook.github.io/react-vr/docs/getting-started.html#content
 [reactvr]: https://facebook.github.io/react-vr/
